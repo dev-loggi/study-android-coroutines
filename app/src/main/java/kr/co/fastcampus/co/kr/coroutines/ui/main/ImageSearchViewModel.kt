@@ -13,10 +13,11 @@ import kr.co.fastcampus.co.kr.coroutines.data.NaverImageSearchRepository
 import kr.co.fastcampus.co.kr.coroutines.model.Item
 
 class ImageSearchViewModel : ViewModel() {
+
     private val repository = NaverImageSearchRepository()
     private val queryFlow = MutableSharedFlow<String>()
     private val favorites = mutableSetOf<Item>()
-    private val _favoritesFlow = MutableSharedFlow<List<Item>>()
+    private val _favoritesFlow = MutableSharedFlow<List<Item>>(replay = 1)
 
     val pagingDataFlow = queryFlow
         .flatMapLatest {
@@ -26,8 +27,9 @@ class ImageSearchViewModel : ViewModel() {
 
     val favoritesFlow = _favoritesFlow.asSharedFlow()
 
-    private fun searchImages(query: String): Flow<PagingData<Item>> =
-        repository.getImageSearch(query)
+    private fun searchImages(query: String): Flow<PagingData<Item>> {
+        return repository.getImageSearch(query)
+    }
 
     fun handleQuery(query: String) {
         viewModelScope.launch {

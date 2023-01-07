@@ -7,7 +7,7 @@ import kr.co.fastcampus.co.kr.coroutines.model.Item
 
 class ImageSearchAdapter(
     private val like: (Item) -> Unit
-) : PagingDataAdapter<Item, ImageSearchViewHolder>(comparator) {
+) : PagingDataAdapter<Item, ImageSearchViewHolder>(Comparator) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -22,8 +22,15 @@ class ImageSearchAdapter(
     }
 
     companion object {
-        val comparator = object : DiffUtil.ItemCallback<Item>() {
-            TODO("ItemCallback을 구현해야합니다.")
+        val Comparator = object : DiffUtil.ItemCallback<Item>() {
+
+            override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
+                return oldItem.thumbnail == newItem.thumbnail
+            }
+
+            override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 }

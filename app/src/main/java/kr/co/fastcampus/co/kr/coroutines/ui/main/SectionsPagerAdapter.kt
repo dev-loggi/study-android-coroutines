@@ -7,8 +7,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 class SectionsPagerAdapter(private val fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {
 
-    override fun createFragment(position: Int): Fragment {
-        TODO("프래그먼트를 생성해야합니다.")
+    override fun createFragment(position: Int): Fragment = when (position) {
+        0 -> ImageSearchFragment()
+        1 -> FavoritesFragment()
+        else -> throw IllegalArgumentException("position=$position")
     }
 
     override fun getItemCount(): Int {

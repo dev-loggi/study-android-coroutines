@@ -21,9 +21,14 @@ class MainActivity : AppCompatActivity() {
         val sectionsPagerAdapter = SectionsPagerAdapter(this)
         val viewPager: ViewPager2 = binding.viewPager
         viewPager.adapter = sectionsPagerAdapter
+
         val tabs: TabLayout = binding.tabs
         TabLayoutMediator(tabs, viewPager) { tab, position ->
-            tab.text = "OBJECT ${(position + 1)}"
+            tab.text = if (position == 0) {
+                "이미지 검색"
+            } else {
+                "즐겨찾기"
+            }
         }.attach()
     }
 }

@@ -1,23 +1,22 @@
 package kr.co.fastcampus.co.kr.coroutines.ui.main
 
 import android.os.Bundle
+import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kr.co.fastcampus.co.kr.coroutines.databinding.FragmentMainBinding
+import kr.co.fastcampus.co.kr.coroutines.R
+import kr.co.fastcampus.co.kr.coroutines.databinding.FragmentFavoritesBinding
 
-class ImageSearchFragment : Fragment() {
+class FavoritesFragment : Fragment() {
 
     private lateinit var imageSearchViewModel: ImageSearchViewModel
-    private val adapter: ImageSearchAdapter = ImageSearchAdapter {
-        imageSearchViewModel.toggle(it)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,26 +27,17 @@ class ImageSearchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        val binding = FragmentMainBinding.inflate(inflater, container, false)
-        val root = binding.root
-
+        val binding = FragmentFavoritesBinding.inflate(inflater, container, false)
+        val adapter = FavoritesAdapter()
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = GridLayoutManager(context, 4)
-        binding.search.setOnClickListener {
-            val query = binding.editText.text.trim().toString()
-            imageSearchViewModel.handleQuery(query)
-        }
 
-        // lifecycleOwner: 프래그먼트의 라이프사이클
-        // viewLifecycleOwner: 뷰의 라이프사이클
         viewLifecycleOwner.lifecycleScope.launch {
-            imageSearchViewModel.pagingDataFlow
-                .collectLatest {
-                    adapter.submitData(it)
-                }
+            imageSearchViewModel.favoritesFlow.collectLatest {
+                adapter.setItems(it)
+            }
         }
 
-        return root
+        return binding.root
     }
 }
